@@ -46,15 +46,22 @@ def root():
 # ===== Main API =====
 @app.post("/analyze")
 def analyze_text(input: TextInput):
-    response = client.responses.create(
-        model="gpt-4.1-mini",
-        input=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": input.text}
-        ]
-    )
+    try:
+        response = client.responses.create(
+            model="gpt-4.1-mini",
+            input=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": input.text}
+            ]
+        )
 
-    return {
-        "input": input.text,
-        "result": response.output_text
-    }
+        return {
+            "input": input.text,
+            "raw_response": response.model_dump()
+        }
+
+    except Exception as e:
+        return {
+            "error_type": type(e).__name__,
+            "error_message": str(e)
+        }
