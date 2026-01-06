@@ -65,3 +65,11 @@ def chat(req: Request):
         ]
     )
     return {"reply": response.choices[0].message.content}
+
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def root():
+    return {"status": "OK", "message": "Chinese AI App is running"}
